@@ -1,81 +1,124 @@
-# 🧠 AtliQ Tees: Talk to a Database (GenAI Project Overview)
+# 🧠 AtliQ Tees: Talk to a Database (GenAI Project)
 
-## 🚀 Introduction
-AtliQ Tees is a fashion-forward t-shirt brand that manages its operations—sales, inventory, and discounts—in a structured MySQL database. Store managers often need answers like:
+## 🚀 Project Overview
 
-    “How many black Nike t-shirts are in stock?”
-    “What revenue can we expect if we sell all small-size Adidas tees after applying discounts?”
+**AtliQ Tees** is a fashion-forward T-shirt brand managing inventory, sales, and discounts in a MySQL database. Store managers regularly seek insights like:
 
-Traditionally, these questions required SQL knowledge. But in our GenAI-powered system, managers can ask natural language questions—and get instant, data-backed answers.
+    > “How many black Nike t-shirts are in stock?”  
+    > “What revenue can we expect if we sell all small-size Adidas tees after discounts?”
+
+Traditionally, these questions required SQL skills. But with this **GenAI-powered solution**, store managers can ask in **plain English** and get instant, data-backed answers.
+
+---
 
 ## 🧬 Why GenAI?
-Generative AI (GenAI) has evolved from static chatbot scripts to intelligent systems that understand context, reason like a human, and generate SQL, summaries, and insights.
 
-🌟 In our project, GenAI acts like a data-savvy sales analyst who's read the entire product catalog and understands your every question.
+Generative AI (GenAI) has evolved far beyond rule-based bots. Today’s LLMs **understand context**, **reason like humans**, and **generate accurate SQL queries** from natural language prompts.
+
+In this project, GenAI acts like your **data-savvy assistant**—fluent in SQL, schema-aware, and ready to answer any business question.
+
+---
 
 ## 🧠 Core Components of the Project
-### 1. LLM (Large Language Model) <br/>
-We use Google PaLM API, a powerful LLM trained on billions of language patterns.
 
-### 2. Embeddings & Vector Database (ChromaDB)<br/>
-Understanding the intent behind a question like:
+### 1. 🧠 LLM (Large Language Model)
+We use [**Hugging Face Transformers**](https://huggingface.co/models) with powerful instruction-tuned models such as:
 
-       “What if we sell out all breathable summer-friendly tees?”
+- [`mistralai/Mistral-7B-Instruct`](https://huggingface.co/mistralai/Mistral-7B-Instruct)
+- [`google/flan-t5-xxl`](https://huggingface.co/google/flan-t5-xxl)
+- (Optionally) OpenAI GPT-4 if available via API
 
-...requires semantic understanding. So we:
+These LLMs are used to convert natural questions into structured SQL queries.
 
-- Convert each product description + schema info into embeddings using Hugging Face models.
- 
-- Store them in ChromaDB, a vector database.
+---
 
-When a query is made, we compare its embedding to the database to fetch the most relevant context.
+### 2. 🧭 Embeddings & Vector Database (ChromaDB)
 
-### 3. RAG: Retrieval-Augmented Generation
-LLMs don’t know everything. Especially not your latest inventory. So we use RAG:
+To understand fuzzy or abstract queries like:
 
-- Retrieve relevant schema and product data from vector DB
+> “What if we sell out all breathable summer-friendly tees?”
 
-- Feed that to the LLM for better context
+...we apply **semantic search** using embeddings.
 
-- Generate highly accurate SQL and answers
+- Product descriptions, metadata, and database schema are converted into **dense vector embeddings** using **Hugging Face Sentence Transformers** (e.g., `all-MiniLM-L6-v2`).
+- These vectors are stored in **[ChromaDB](https://www.trychroma.com/)**, a fast and lightweight vector database.
 
+When a question is asked, its vector is compared to stored embeddings to retrieve **relevant context**.
 
-### 4. LangChain: The Brain Behind the Workflow
-LangChain orchestrates every step:
+---
 
-- Breaks down the prompt
+### 3. 📚 RAG: Retrieval-Augmented Generation
 
-- Retrieves schema/data context
+LLMs don’t know your live database content. So we use **RAG** to improve accuracy:
 
-- Sends everything to the LLM
+- **Retrieve** the relevant schema or product-related information from ChromaDB.
+- **Augment** the LLM prompt with this contextual data.
+- **Generate** SQL and answers more accurately.
 
-- Executes the SQL query
+This bridges the gap between pretrained LLMs and your private data.
 
-- Returns the result
+---
 
-### 5. UI Layer (Built with Streamlit)
-Used Streamlit to build a clean front-end for store managers.
+### 4. 🔗 LangChain: The Workflow Engine
+
+We use [**LangChain**](https://www.langchain.com/) to orchestrate the full workflow:
+
+- Understand the user prompt
+- Pull relevant context using ChromaDB
+- Construct a dynamic prompt for the LLM
+- Get SQL from the LLM
+- Run the query on **MySQL**
+- Return results as a human-readable answer
+
+LangChain makes it easy to **chain together retrieval, generation, and execution** logic.
+
+---
+
+### 5. 🎛️ UI Layer (Streamlit)
+
+A lightweight and interactive front-end is built using [**Streamlit**](https://streamlit.io/). Store managers simply type (or soon, speak) their question—no SQL needed!
+
+---
 
 ## 🧱 Tech Stack Summary
 
-- LLM  :	Google PaLM API
-- Embeddings : Hugging Face Sentence Transformers
-- Vector DB : ChromaDB
-- Orchestration : LangChain
-- UI	: Streamlit
-- Database: MySQL
+| Component        | Technology Used                                |
+|------------------|-------------------------------------------------|
+| 💬 LLM           | Hugging Face (Mistral-7B, FLAN-T5) or OpenAI GPT |
+| 🧠 Embeddings    | Hugging Face Sentence Transformers (`MiniLM`)   |
+| 📦 Vector DB     | ChromaDB                                        |
+| 🧠 Orchestration | LangChain                                       |
+| 💻 UI            | Streamlit                                       |
+| 🗃️ Database      | MySQL                                           |
+
+---
 
 ## 📚 Learning Outcomes
-- The role of LLMs in generating SQL
-- The power of embeddings and vector search
-- How RAG ensures better accuracy in GenAI apps
-- LangChain's orchestration capabilities
-- How to build natural language database interfaces
 
-### 📦 Future Enhancements
-- Enable voice queries using speech-to-text
-- Add chart-based answers (e.g., revenue trends)
-- Integrate with LangGraph for more complex workflows
+- How LLMs can generate SQL from plain English
+- Role of **embeddings** in semantic search
+- How **RAG** improves GenAI accuracy with private data
+- LangChain’s role in chaining logic
+- Building **natural language interfaces** for databases
+
+---
+
+## 📈 Sample Query Example
+
+**User Input**  
+> “How much sales amount will be generated if we sell all small-size Adidas t-shirts today after discounts?”
+
+**Output**  
+> `3165` (as computed from MySQL after SQL generation & execution)
+
+---
+
+## 🔮 Future Enhancements
+
+- 🎙️ **Voice queries** via speech-to-text integration
+- 📊 **Chart-based results** for trend insights
+- 🔁 **LangGraph** integration for advanced workflows (looping, conditional prompts)
+- 🔐 Add authentication for secure data access
 
 ## **credits**
 - This project is part of code basics [GenAI course](https://www.youtube.com/watch?v=d4yCWBGFCEs&t=125s)
